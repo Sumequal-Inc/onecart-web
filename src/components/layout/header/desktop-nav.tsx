@@ -1,35 +1,57 @@
-import { ChevronDown2Icon } from '@/icons/icons';
-import { cn } from '@/lib/utils';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { navItems } from './nav-items';
-import { useEffect, useState } from 'react';
+"use client";
+
+import { ChevronDown2Icon } from "@/icons/icons";
+import { cn } from "@/lib/utils";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { navItems } from "./nav-items";
+import { useEffect, useState } from "react";
+
+// TYPES
+type LinkItem = {
+  type: "link";
+  href: string;
+  label: string;
+};
+
+type DropdownItem = {
+  type: "dropdown";
+  label: string;
+  items: { label: string; href: string }[];
+};
+
+type NavItem = LinkItem | DropdownItem;
+
+// TYPE GUARD
+function isDropdown(item: NavItem): item is DropdownItem {
+  return item.type === "dropdown";
+}
 
 export default function DesktopNav() {
   const pathname = usePathname();
-  const [activeDropdownKey, setActiveDropdownKey] = useState('');
+  const [activeDropdownKey, setActiveDropdownKey] = useState("");
 
   function toggleActiveDropdown(key: string) {
-    setActiveDropdownKey((prevKey) => (prevKey === key ? '' : key));
+    setActiveDropdownKey((prevKey) => (prevKey === key ? "" : key));
   }
 
   useEffect(() => {
-    // Hide dropdown on pathname changes
-    setActiveDropdownKey('');
+    setActiveDropdownKey("");
   }, [pathname]);
 
   return (
     <nav className="hidden lg:flex lg:items-center bg-[#F9FAFB] dark:bg-white/3 rounded-full p-1 max-h-fit">
-      {navItems.map((item) => {
-        if (item.type === 'link') {
+      {navItems.map((item: NavItem) => {
+        // LINK
+        if (item.type === "link") {
           return (
             <Link
               key={item.href}
               href={item.href}
               className={cn(
-                'text-gray-500 dark:text-gray-400 text-sm px-4 py-1.5 rounded-full hover:text-primary-500 font-medium',
+                "text-gray-500 dark:text-gray-400 text-sm px-4 py-1.5 rounded-full hover:text-primary-500 font-medium",
                 {
-                  'bg-white dark:bg-white/5 font-medium text-gray-800 dark:text-white/90 shadow-xs':
+                  "bg-white dark:bg-white/5 font-medium text-gray-800 dark:text-white/90 shadow-xs":
                     pathname === item.href,
                 }
               )}
@@ -39,51 +61,42 @@ export default function DesktopNav() {
           );
         }
 
-        if (item.type === 'dropdown') {
-          const toggleThisDropdown = () => {
-            toggleActiveDropdown(item.label);
-          };
-
+        // DROPDOWN
+        if (isDropdown(item)) {
           const isDropdownActive = activeDropdownKey === item.label;
 
           return (
-            <div key={item.label} className="relative">
+            <div
+              key={item.label}
+              className="relative"
+              onMouseEnter={() => setActiveDropdownKey(item.label)}
+              onMouseLeave={() => setActiveDropdownKey("")}
+            >
               <button
-                onClick={toggleThisDropdown}
-                onMouseEnter={toggleThisDropdown}
-                onMouseLeave={toggleThisDropdown}
-                onKeyDown={(e) => {
-                  if (isDropdownActive && e.key === 'Escape') {
-                    toggleThisDropdown();
-                  }
-                }}
+                onClick={() => toggleActiveDropdown(item.label)}
                 className={cn(
-                  'text-gray-500 dark:text-gray-400 hover:text-primary-500 group text-sm inline-flex gap-1 items-center px-4 py-1.5 font-medium rounded-full',
+                  "text-gray-500 dark:text-gray-400 hover:text-primary-500 group text-sm inline-flex gap-1 items-center px-4 py-1.5 font-medium rounded-full",
                   {
-                    'bg-white dark:bg-white/5 font-medium text-gray-800 dark:text-white/90 shadow-xs':
-                      item.items.some(({ href }) => pathname?.includes(href)),
+                    "bg-white dark:bg-white/5 font-medium text-gray-800 dark:text-white/90 shadow-xs":
+                      item.items.some((sub) =>
+                        pathname?.includes(sub.href)
+                      ),
                   }
                 )}
               >
                 <span>{item.label}</span>
                 <ChevronDown2Icon
-                  className={cn('size-4 transition-transform duration-200', {
-                    'rotate-180': isDropdownActive,
-                  })}
+                  className={cn(
+                    "w-4 h-4 transition-transform duration-200",
+                    {
+                      "rotate-180": isDropdownActive,
+                    }
+                  )}
                 />
               </button>
 
               {isDropdownActive && (
-                <div
-                  onMouseEnter={toggleThisDropdown}
-                  onMouseLeave={toggleThisDropdown}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Escape') {
-                      toggleThisDropdown();
-                    }
-                  }}
-                  className="absolute right-0 w-[266px] bg-white dark:bg-dark-secondary dark:border-gray-800 rounded-2xl shadow-theme-lg border border-gray-100 p-3 z-50"
-                >
+                <div className="absolute right-0 w-[266px] bg-white dark:bg-dark-secondary dark:border-gray-800 rounded-2xl shadow-lg border border-gray-100 p-3 z-50">
                   <div className="space-y-1">
                     {item.items.map((subItem) => (
                       <Link
@@ -100,6 +113,8 @@ export default function DesktopNav() {
             </div>
           );
         }
+
+        return null;
       })}
     </nav>
   );

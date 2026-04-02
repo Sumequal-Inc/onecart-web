@@ -1,9 +1,8 @@
-'use client';
+"use client";
 
-import type React from 'react';
-import { Fragment, useState } from 'react';
-import Image from 'next/image';
-import { cn } from '@/lib/utils';
+import { useState } from "react";
+import Image from "next/image";
+import type { ReactNode } from "react";
 
 // MUI Icons
 import PersonIcon from "@mui/icons-material/Person";
@@ -15,61 +14,57 @@ import SecurityIcon from "@mui/icons-material/Security";
 interface Tab {
   id: string;
   label: string;
-  icon: React.ReactNode;
-  lightImage: string;
-  darkImage: string;
+  icon: ReactNode;
+  image: string;
   title: string;
   description: string;
 }
 
 export default function LoanTabs() {
-  const [activeTab, setActiveTab] = useState('personal');
+  const [activeTab, setActiveTab] = useState("personal");
 
   const tabs: Tab[] = [
     {
-      id: 'personal',
-      label: 'Personal Loan',
-      icon: <PersonIcon />,
-      lightImage: '/images/loan1.png',
-      darkImage: '/images/loan1.png',
-      title: 'Personal Loan',
-      description: 'Get instant personal loans with minimal documentation and fast approval.',
+      id: "personal",
+      label: "Personal Loan",
+      icon: <PersonIcon fontSize="small" />,
+      image: "/images/loan1.png",
+      title: "Personal Loan",
+      description:
+        "Get instant personal loans with minimal documentation and fast approval.",
     },
     {
-      id: 'business',
-      label: 'Business Loan',
-      icon: <BusinessIcon />,
-      lightImage: '/images/loan2.png',
-      darkImage: '/images/loan2.png',
-      title: 'Business Loan',
-      description: 'Flexible business loans for working capital and expansion.',
+      id: "business",
+      label: "Business Loan",
+      icon: <BusinessIcon fontSize="small" />,
+      image: "/images/loan2.png",
+      title: "Business Loan",
+      description:
+        "Flexible business loans for working capital and expansion.",
     },
     {
-      id: 'home',
-      label: 'Home Loan',
-      icon: <HomeIcon />,
-      lightImage: '/images/loan3.png',
-      darkImage: '/images/loan3.png',
-      title: 'Home Loan',
-      description: 'Affordable home loans with easy EMI options.',
+      id: "home",
+      label: "Home Loan",
+      icon: <HomeIcon fontSize="small" />,
+      image: "/images/loan3.png",
+      title: "Home Loan",
+      description: "Affordable home loans with easy EMI options.",
     },
     {
-      id: 'property',
-      label: 'Loan Against Property',
-      icon: <AccountBalanceIcon />,
-      lightImage: '/images/loan4.png',
-      darkImage: '/images/loan4.png',
-      title: 'Loan Against Property',
-      description: 'Get high-value loan against your property.',
+      id: "property",
+      label: "Loan Against Property",
+      icon: <AccountBalanceIcon fontSize="small" />,
+      image: "/images/loan4.png",
+      title: "Loan Against Property",
+      description: "Get high-value loan against your property.",
     },
     {
-      id: 'insurance',
-      label: 'Insurance',
-      icon: <SecurityIcon />,
-      lightImage: '/images/loan5.png',
-      darkImage: '/images/loan5.png',
-      title: 'Insurance',
-      description: 'Protect your family with affordable insurance plans.',
+      id: "insurance",
+      label: "Insurance",
+      icon: <SecurityIcon fontSize="small" />,
+      image: "/images/loan5.png",
+      title: "Insurance",
+      description: "Protect your family with affordable insurance plans.",
     },
   ];
 
@@ -78,15 +73,14 @@ export default function LoanTabs() {
   return (
     <section id="tools" className="py-20 bg-[#F8FAFC]">
       <div className="max-w-6xl mx-auto px-6">
-
         {/* Heading */}
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-[#374151] mb-3">
             Our Financial Services
           </h2>
           <p className="text-[#6B7280] max-w-2xl mx-auto">
-            We provide a wide range of loan and insurance services with fast approval,
-            low interest rates and minimal documentation.
+            We provide a wide range of loan and insurance services with fast
+            approval, low interest rates and minimal documentation.
           </p>
         </div>
 
@@ -98,8 +92,8 @@ export default function LoanTabs() {
               onClick={() => setActiveTab(tab.id)}
               className={`flex items-center gap-2 px-5 py-2 rounded-full border transition ${
                 activeTab === tab.id
-                  ? 'bg-[#1E3A8A] text-white border-[#1E3A8A]'
-                  : 'bg-white text-[#374151] border-gray-300 hover:border-[#2563EB]'
+                  ? "bg-[#1E3A8A] text-white border-[#1E3A8A]"
+                  : "bg-white text-[#374151] border-gray-300 hover:border-[#2563EB]"
               }`}
             >
               {tab.icon}
@@ -111,7 +105,7 @@ export default function LoanTabs() {
         {/* Content */}
         <div className="grid md:grid-cols-2 gap-10 items-center bg-white p-6 rounded-2xl shadow-lg border">
           <Image
-            src={currentTab.lightImage}
+            src={currentTab.image}
             alt={currentTab.title}
             width={500}
             height={300}
@@ -131,7 +125,6 @@ export default function LoanTabs() {
             </button>
           </div>
         </div>
-
       </div>
     </section>
   );
